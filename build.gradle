@@ -1,0 +1,46 @@
+buildscript {
+    ext {
+        springBootVersion = '3.4.4'
+    }
+}
+
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.4'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+allprojects {
+    group = 'org.gestion'
+    version = '1.0.0-SNAPSHOT'
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'io.spring.dependency-management'
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    dependencies {
+        // Puedes descomentar si quieres declarar dependencias comunes aquí:
+        // implementation 'org.projectlombok:lombok'
+        // annotationProcessor 'org.projectlombok:lombok'
+        // testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    }
+}
+
+task bootAll {
+    dependsOn ':auth-service:bootRun',
+            ':products-service:bootRun',
+            ':clients-service:bootRun',
+            ':sales-service:bootRun',
+            ':logs-service:bootRun'
+}
+
