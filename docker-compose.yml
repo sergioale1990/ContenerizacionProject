@@ -15,7 +15,7 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
-      - app-network
+      - mysql-network
       
   auth-service:
     build: ./auth-service
@@ -31,7 +31,8 @@ services:
     ports:
       - "8082:8082"
     networks:
-      - app-network
+      - auth-network
+      - mysql-network
       
   clients-service:
     build: ./clients-service
@@ -47,9 +48,9 @@ services:
     ports:
       - "8084:8084"
     networks:
-      - app-network
-    
-    
+      - clients-network
+      - mysql-network
+      
   products-service:
     build: ./products-service
     container_name: products-service
@@ -64,7 +65,9 @@ services:
     ports:
       - "8083:8083"
     networks:
-      - app-network
+      - products-network
+      - mysql-network
+      - logs-network
       
   sales-service:
     build: ./sales-service
@@ -80,9 +83,10 @@ services:
     ports:
       - "8085:8085"
     networks:
-      - app-network
-      
-      
+      - sales-network
+      - mysql-network
+      - logs-network
+           
   logs-service:
     build: ./logs-service
     container_name: logs-service
@@ -97,11 +101,45 @@ services:
     ports:
       - "8086:8086"
     networks:
-      - app-network
+      - logs-network
+      - mysql-network
       
 networks:
-  app-network:
+  mysql-network:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.0.0/16
+   
+  auth-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.31.0.0/16
+        
+  clients-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.32.0.0/16
+      
+  products-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.33.0.0/16
     
+  sales-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.34.0.0/16
+        
+  logs-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.35.0.0/16
+
 volumes:
   mysql_data:
