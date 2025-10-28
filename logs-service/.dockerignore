@@ -1,0 +1,12 @@
+# Ignorar todos los archivos y carpetas por defecto
+**
+
+# Permitir dockerfile y jar compilado
+!Dockerfile
+!build/libs/*.jar
+
+.gradle/
+.idea/
+.git/
+.gitignore
+*.iml

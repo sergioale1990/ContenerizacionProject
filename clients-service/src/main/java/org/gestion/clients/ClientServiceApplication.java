@@ -1,12 +1,11 @@
-package org.gestion.auth;
-
+package org.gestion.clients;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Main {
+public class ClientServiceApplication {
     public static void main(String[] args) {
-        SpringApplication.run(Main.class, args);
+        SpringApplication.run(ClientServiceApplication.class, args);
     }
 }

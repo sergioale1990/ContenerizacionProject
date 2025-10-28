@@ -6,7 +6,8 @@ plugins {
 
 group = 'org.gestion'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
+sourceCompatibility = '21'
+targetCompatibility = '21'
 
 repositories {
     mavenCentral()
@@ -27,15 +28,9 @@ dependencies {
 }
 
 springBoot {
-    mainClass = 'org.gestion.products.Main'
+    mainClass = 'org.gestion.products.ProductsServiceApplication'
 }
 
 test {
     useJUnitPlatform()
-}
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
 }

@@ -1,11 +1,11 @@
-package org.gestion.products;
+package org.gestion.sales;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Main {
+public class SalesServiceApplication {
     public static void main(String[] args) {
-        SpringApplication.run(Main.class, args);
+        SpringApplication.run(SalesServiceApplication.class, args);
     }
 }
