@@ -1,6 +1,5 @@
 package org.gestion.auth.config;
 
-
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.gestion.auth.model.Access;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -23,20 +23,32 @@ public class DataSeeder {
 
     @PostConstruct
     public void seed() {
-        List<String> accessNames = List.of("access.sales", "access.products", "access.clients", "access.logs");
-        HashSet<Access> accesses = new HashSet<>();
-        for (String accessName : accessNames) {
-            Access access = accessRepository.findByAccessName(accessName)
-                    .orElseGet(() -> accessRepository.save(new Access(null, accessName)));
-            accesses.add(access);
+        try {
+            List<String> accessNames = List.of("access.sales", "access.products", "access.clients", "access.logs");
+            Set<Access> accesses = new HashSet<>();
+
+            for (String accessName : accessNames) {
+                Access access = accessRepository.findByAccessName(accessName)
+                        .orElseGet(() -> accessRepository.save(new Access(null, accessName)));
+                accesses.add(access);
+            }
+
+            userRepository.findByUsername("admin").ifPresentOrElse(
+                user -> System.out.println("Usuario admin ya existe"),
+                () -> {
+                    User admin = new User();
+                    admin.setUsername("admin");
+                    admin.setPassword(passwordEncoder.encode("admin123"));
+                    admin.setAccess(accesses);
+                    userRepository.save(admin);
+                    System.out.println("Se ha creado el usuario administrador por defecto.");
+                }
+            );
+
+        } catch (Exception e) {
+            System.err.println("Error al inicializar los datos: " + e.getMessage());
+            e.printStackTrace();
         }
-
-        User admin = new User();
-        admin.setUsername("admin");
-        admin.setPassword(passwordEncoder.encode("admin123"));
-        admin.setAccess(accesses);
-        userRepository.save(admin);
-        System.out.println("Se ha creado el usuario administrador");
     }
-
 }
+

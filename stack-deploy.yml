@@ -1,0 +1,227 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8.0
+    secrets:
+      - mysql_root_password
+      - mysql_user
+      - mysql_password
+    environment:
+      MYSQL_ROOT_PASSWORD: /run/secrets/mysql_root_password
+      MYSQL_DATABASE: gestion_comercial
+      MYSQL_USER: /run/secrets/mysql_user
+      MYSQL_PASSWORD: /run/secrets/mysql_password
+      MYSQL_ROOT_HOST: "%"
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      mysql-network:
+        aliases:
+         - mysql
+    #healthcheck:
+      #test: ["CMD-SHELL", "mysql ping -h localhost -pSersistel4713088013 || exit 1"]
+      #$interval: 10s
+      #timeout: 5s
+      #retries: 10
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      #placement:
+        #contraints: 
+          #- node.role == manager
+      
+  auth-service:
+    image: sergio1990/auth-service:1.0
+    secrets:
+      #- jwt_secret
+      - mysql_user
+      - mysql_password
+    environment:
+      MYSQL_USER: /run/secrets/mysql_user
+      MYSQL_PASSWORD: /run/secrets/mysql_password
+      JWT_SECRET: 'UzYxN2ZkOGI3ZGIyZWI4YTg3Mzg3ZmM5NmFmODNkYzQ2MTI1ZjI0ZjBiNWE2NDgx'
+      JWT_EXPIRATION: 3600000
+      SPRING_DATASOURCE_URL: jdbc:mysql://appmicroservices_mysql:3306/gestion_comercial?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_HIKARI__INITIALIZATION_FAIL_TIMEOUT: 60000
+      SPRING_DATASOURCE_HIKARI__CONNECTION_TIMEOUT: 30000
+      SPRING_DATASOURCE_HIKARI__MAXIMUM_POOL_SIZE: 5
+      SPRING_DATASOURCE_HIKARI__VALIDATION_TIMEOUT: 5000
+      SPRING_DATASOURCE_HIKARI__KEEPALIVE_TIME: 60000
+      SPRING_DATASOURCE_HIKARI__IDLE_TIMEOUT: 600000
+    ports:
+      - "8082:8082"
+    networks:
+      - app-network
+      - mysql-network
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+      #update_config:
+        #order: start-first
+        #parallelism: 1
+        #delay: 5s
+
+  products-service:
+    image: sergio1990/products-service:1.0
+    environment:
+      MYSQL_USER: /run/secrets/mysql_user
+      MYSQL_PASSWORD: /run/secrets/mysql_password
+      JWT_SECRET: 'UzYxN2ZkOGI3ZGIyZWI4YTg3Mzg3ZmM5NmFmODNkYzQ2MTI1ZjI0ZjBiNWE2NDgx'
+      JWT_EXPIRATION: 3600000
+      SPRING_DATASOURCE_URL: jdbc:mysql://appmicroservices_mysql:3306/gestion_comercial?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_HIKARI__INITIALIZATION_FAIL_TIMEOUT: 60000
+      SPRING_DATASOURCE_HIKARI__CONNECTION_TIMEOUT: 30000
+      SPRING_DATASOURCE_HIKARI__MAXIMUM_POOL_SIZE: 5
+      SPRING_DATASOURCE_HIKARI__VALIDATION_TIMEOUT: 5000
+      SPRING_DATASOURCE_HIKARI__KEEPALIVE_TIME: 60000
+      SPRING_DATASOURCE_HIKARI__IDLE_TIMEOUT: 600000
+    ports:
+      - "8083:8083"
+    networks:
+      - app-network
+      - mysql-network
+    secrets:
+      #- jwt_secret
+      - mysql_user
+      - mysql_password
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+      #update_config:
+        #order: start-first
+        #parallelism: 1
+        #delay: 5s
+
+  clients-service:
+    image: sergio1990/clients-service:1.0
+    environment:
+      MYSQL_USER: /run/secrets/mysql_user
+      MYSQL_PASSWORD: /run/secrets/mysql_password
+      JWT_SECRET: 'UzYxN2ZkOGI3ZGIyZWI4YTg3Mzg3ZmM5NmFmODNkYzQ2MTI1ZjI0ZjBiNWE2NDgx'
+      JWT_EXPIRATION: 3600000
+      SPRING_DATASOURCE_URL: jdbc:mysql://appmicroservices_mysql:3306/gestion_comercial?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_HIKARI__INITIALIZATION_FAIL_TIMEOUT: 60000
+      SPRING_DATASOURCE_HIKARI__CONNECTION_TIMEOUT: 30000
+      SPRING_DATASOURCE_HIKARI__MAXIMUM_POOL_SIZE: 5
+      SPRING_DATASOURCE_HIKARI__VALIDATION_TIMEOUT: 5000
+      SPRING_DATASOURCE_HIKARI__KEEPALIVE_TIME: 60000
+      SPRING_DATASOURCE_HIKARI__IDLE_TIMEOUT: 600000
+    ports:
+      - "8084:8084"
+    networks:
+      - app-network
+      - mysql-network
+    secrets:
+      #- jwt_secret
+      - mysql_user
+      - mysql_password
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+      #update_config:
+        #order: start-first
+        #parallelism: 1
+        #delay: 5s
+
+  sales-service:
+    image: sergio1990/sales-service:1.0
+    environment:
+      MYSQL_USER: /run/secrets/mysql_user
+      MYSQL_PASSWORD: /run/secrets/mysql_password
+      JWT_SECRET: 'UzYxN2ZkOGI3ZGIyZWI4YTg3Mzg3ZmM5NmFmODNkYzQ2MTI1ZjI0ZjBiNWE2NDgx'
+      JWT_EXPIRATION: 3600000
+      SPRING_DATASOURCE_URL: jdbc:mysql://appmicroservices_mysql:3306/gestion_comercial?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_HIKARI__INITIALIZATION_FAIL_TIMEOUT: 60000
+      SPRING_DATASOURCE_HIKARI__CONNECTION_TIMEOUT: 30000
+      SPRING_DATASOURCE_HIKARI__MAXIMUM_POOL_SIZE: 5
+      SPRING_DATASOURCE_HIKARI__VALIDATION_TIMEOUT: 5000
+      SPRING_DATASOURCE_HIKARI__KEEPALIVE_TIME: 60000
+      SPRING_DATASOURCE_HIKARI__IDLE_TIMEOUT: 600000
+    ports:
+      - "8085:8085"
+    networks:
+      - app-network
+      - mysql-network
+    secrets:
+      #- jwt_secret
+      - mysql_user
+      - mysql_password
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+      #update_config:
+        #order: start-first
+        #parallelism: 1
+        #delay: 5s
+        
+  logs-service:
+    image: sergio1990/logs-service:1.0
+    environment:
+      MYSQL_USER: /run/secrets/mysql_user
+      MYSQL_PASSWORD: /run/secrets/mysql_password
+      JWT_SECRET: 'UzYxN2ZkOGI3ZGIyZWI4YTg3Mzg3ZmM5NmFmODNkYzQ2MTI1ZjI0ZjBiNWE2NDgx'
+      JWT_EXPIRATION: 3600000
+      SPRING_DATASOURCE_URL: jdbc:mysql://appmicroservices_mysql:3306/gestion_comercial?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_HIKARI__INITIALIZATION_FAIL_TIMEOUT: 60000
+      SPRING_DATASOURCE_HIKARI__CONNECTION_TIMEOUT: 30000
+      SPRING_DATASOURCE_HIKARI__MAXIMUM_POOL_SIZE: 5
+      SPRING_DATASOURCE_HIKARI__VALIDATION_TIMEOUT: 5000
+      SPRING_DATASOURCE_HIKARI__KEEPALIVE_TIME: 60000
+      SPRING_DATASOURCE_HIKARI__IDLE_TIMEOUT: 600000
+    ports:
+      - "8086:8086"
+    networks:
+      - app-network
+      - mysql-network
+    secrets:
+      #- jwt_secret
+      - mysql_user
+      - mysql_password
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      #update_config:
+        #order: start-first
+        #parallelism: 1
+        #delay: 5s
+
+networks:
+  mysql-network:
+    driver: overlay
+   
+  app-network:
+    driver: overlay
+        
+  #clients-network:
+    #driver: overlay
+      
+  #products-network:
+    #driver: overlay
+    
+  #sales-network:
+    #driver: overlay
+        
+  #logs-network:
+    #driver: overlay
+
+volumes:
+  mysql_data:
+    driver: local
+secrets:
+  mysql_root_password:
+    external: true
+  mysql_user:
+    external: true
+  mysql_password:
+    external: true
+  jwt_secret:
+    external: true
