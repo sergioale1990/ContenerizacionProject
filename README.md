@@ -7,7 +7,8 @@ Proyecto Contenerizacion y Orquestacion
 - docker
 
 ## Instrucciones
-- Ejecutar el comando ./gradlew build -x test, esto nos permitira crear los archivos .jar para realizar el despliegue en docker.
+- Crear archivo environment.env en el root del proyecto para credenciales, este archivo debe incluir las siguientes variables: MYSQL_ROOT_PASSWORD, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASSWORD, JWT_SECRET Y JWT_EXPIRATION.
+- Ejecutar el comando ./gradlew build -x test, esto nos permitira crgit ear los archivos .jar para realizar el despliegue en docker.
 - Ejecutar el comando docker compose up -d, esto nos permitira desplegar las imagenes en los contenedores
 - Realizar pruebas con Postman (el sistema no tiene una interfaz grafica unicamente EndPoints)
 - Para obtener un token se debe realizar un POST a http://localhost:8082/auth/login el cual retornara un token, este token nos servira para el resto de servicios.
