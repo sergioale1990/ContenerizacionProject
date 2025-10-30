@@ -7,6 +7,7 @@ Proyecto Contenerizacion y Orquestacion
 - docker
 
 ## Instrucciones
+- Se deben crear los archicos secret para las siguientes variables, mysql_root_password, mysql_user, mysql_password
 - Ejecutar el comando docker stack deploy -c stack-deploy.yml appmicroservices, esto desplegara los contenedores
 - Realizar pruebas con Postman (el sistema no tiene una interfaz grafica unicamente EndPoints)
 - Para obtener un token se debe realizar un POST a http://localhost:8082/auth/login el cual retornara un token, este token nos servira para el resto de servicios.
